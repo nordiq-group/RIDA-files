@@ -1,0 +1,109 @@
+{
+  "info": {
+    "name": "Denmark Bike Node Edges (Cykelrute-forbindelser)",
+    "description": "Fetches the connecting route segments ('edges') of Denmark's numbered cycle-node network from OpenStreetMap via the Overpass API.\n\nIn the node-network tagging scheme (same one used across DK/NL/BE), each edge between two numbered nodes is mapped as a relation: type=route, route=bicycle, network=rcn. Each relation's way members are the physical path between its two nodes; its node members are the two endpoint waypoints (see the companion 'Denmark Bike Nodes' collection).\n\nRun 'All Bike Node Edges - Denmark (Overpass main)' first; use the mirror if overpass-api.de is slow/rate-limited.\n\nNote: this is a much heavier query than the nodes-only one — full country returns many thousands of relations plus their way/node members with full geometry. Expect 60-180s server-side, and consider using the single-municipality example while testing.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "overpass_main",
+      "value": "https://overpass-api.de/api/interpreter"
+    },
+    {
+      "key": "overpass_mirror",
+      "value": "https://overpass.kumi.systems/api/interpreter"
+    }
+  ],
+  "item": [
+    {
+      "name": "All Bike Node Edges - Denmark (Overpass main)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/x-www-form-urlencoded"
+          }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "data",
+              "value": "[out:json][timeout:180];\narea[\"ISO3166-1\"=\"DK\"][admin_level=2]->.dk;\nrelation[\"type\"=\"route\"][\"route\"=\"bicycle\"][\"network\"=\"rcn\"](area.dk);\nout body;\n>;\nout body geom qt;",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{overpass_main}}",
+          "host": [
+            "{{overpass_main}}"
+          ]
+        },
+        "description": "Overpass QL query for every node-network route relation (an 'edge') in Denmark. The first 'out body;' prints the relations themselves (with their node/way member refs and roles). '>;' recurses down to pull in every member way and node. The final 'out body geom qt;' prints those members with full line geometry for ways and coordinates for nodes.\n\nEach relation's tags typically include rcn_ref-style from/to references or a name describing the two connected node numbers — check the 'tags' object on each relation element in the response."
+      },
+      "response": []
+    },
+    {
+      "name": "All Bike Node Edges - Denmark (Overpass mirror)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/x-www-form-urlencoded"
+          }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "data",
+              "value": "[out:json][timeout:180];\narea[\"ISO3166-1\"=\"DK\"][admin_level=2]->.dk;\nrelation[\"type\"=\"route\"][\"route\"=\"bicycle\"][\"network\"=\"rcn\"](area.dk);\nout body;\n>;\nout body geom qt;",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{overpass_mirror}}",
+          "host": [
+            "{{overpass_mirror}}"
+          ]
+        },
+        "description": "Same query as the main request, routed to the Kumi Systems Overpass mirror. Use this if overpass-api.de is rate-limiting or timing out."
+      },
+      "response": []
+    },
+    {
+      "name": "Bike Node Edges - Single Municipality (example: Tønder Kommune)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/x-www-form-urlencoded"
+          }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "data",
+              "value": "[out:json][timeout:90];\narea[\"name\"=\"Tønder Kommune\"][\"boundary\"=\"administrative\"]->.searchArea;\nrelation[\"type\"=\"route\"][\"route\"=\"bicycle\"][\"network\"=\"rcn\"](area.searchArea);\nout body;\n>;\nout body geom qt;",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{overpass_main}}",
+          "host": [
+            "{{overpass_main}}"
+          ]
+        },
+        "description": "Narrower example scoped to a single kommune — swap the 'name' value to any Danish municipality. Much faster for testing before running the full-country query."
+      },
+      "response": []
+    }
+  ]
+}
