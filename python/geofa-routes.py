@@ -1,13 +1,17 @@
 """
 geofa_routes.py
 
-Fetch Danish route/trail line geometries (Cykelrute, Vandrerute,
-Kanoerute, ...) from GeoFA's public SQL API.
+Fetch Danish bike-node-network segment geometries (Cykelknudepunktsstraekninger,
+GeoFA theme 5609) from GeoFA's public SQL API.
 
-Unlike the OSM-based cycle *nodes* module (geofa_cycle_nodes.py),
-route/trail geometries come from GeoFA's own SQL API, querying table
-fkg.t_5802_fac_li ("facility lines"). No API key is required for
-read queries.
+This is the segment/line counterpart to the cykelknudepunkter *nodes* theme
+(5608) — table fkg.t_5609_cykelkrydspunktsstraekninger. Note the "kryds"
+spelling in the live table name (not "knude", despite the theme's Danish
+name and every field in the spec PDF using "knude"). This theme has no
+`navn`/`rute_ty` columns — it is not typed by route (Cykelrute/Vandrerute/
+Kanoerute); segments are described by `beliggenhedskommune` (kommune code)
+and boolean surface/access flags (`asfalteret`, `privatvej`). No API key is
+required for read queries.
 
 Docs: https://www.geodanmark.dk/home/vejledninger/geofa/vejledninger-til-geofa/
 
@@ -16,18 +20,19 @@ Example
     from geofa_routes import RouteClient
 
     client = RouteClient()
-    routes = client.get_routes(route_type="Cykelrute", bbox=(55.4, 12.0, 56.0, 12.8))
+    routes = client.get_routes(beliggenhedskommune=570, bbox=(55.4, 12.0, 56.0, 12.8))
     geojson = client.to_geojson(routes)
 
 CLI
 ---
-    python3 geofa_routes.py --type Cykelrute --bbox 55.4,12.0,56.0,12.8 --out routes.geojson
-    python3 geofa_routes.py --type Vandrerute --min-length-m 5000 --limit 50
+    python3 geofa-routes.py --bbox 55.4,12.0,56.0,12.8 --out routes.geojson
+    python3 geofa-routes.py --beliggenhedskommune=570 --limit 50
 """
 
 from __future__ import annotations
 
 import json
+import ssl
 import time
 import urllib.error
 import urllib.parse
@@ -35,26 +40,27 @@ import urllib.request
 from dataclasses import asdict, dataclass, field
 from typing import Optional
 
+try:
+    import certifi
+
+    _SSL_CONTEXT = ssl.create_default_context(cafile=certifi.where())
+except ImportError:
+    _SSL_CONTEXT = ssl.create_default_context()
+
 GEOFA_SQL_ENDPOINT = "https://geofa.geodanmark.dk/api/v2/sql/fkg"
 
-FACILITY_LINE_TABLE = "fkg.t_5802_fac_li"
-
-# Known rute_ty (route type) values in fkg.t_5802_fac_li.
-ROUTE_TYPE_CYKELRUTE = "Cykelrute"
-ROUTE_TYPE_VANDRERUTE = "Vandrerute"
-ROUTE_TYPE_KANORUTE = "Kanoerute"
-
+ROUTE_TABLE = "fkg.t_5609_cykelkrydspunktsstraekninger"
 
 class GeoFAError(RuntimeError):
     """Raised when the GeoFA SQL API request fails or returns an error."""
 
-
 @dataclass
 class Route:
-    """A single facility line (route/trail) from fkg.t_5802_fac_li."""
+    """A single bike-node-network segment from fkg.t_5609_cykelkrydspunktsstraekninger."""
 
-    name: Optional[str]
-    route_type: Optional[str]
+    beliggenhedskommune: Optional[int]
+    privatvej: Optional[bool]
+    asfalteret: Optional[bool]
     length_m: Optional[float]
     geometry: dict
     extra: dict = field(default_factory=dict)
@@ -64,13 +70,13 @@ class Route:
             "type": "Feature",
             "geometry": self.geometry,
             "properties": {
-                "navn": self.name,
-                "rute_ty": self.route_type,
+                "beliggenhedskommune": self.beliggenhedskommune,
+                "privatvej": self.privatvej,
+                "asfalteret": self.asfalteret,
                 "length_m": self.length_m,
                 **self.extra,
             },
         }
-
 
 class RouteClient:
     """Client for fetching Danish route/trail geometries from the GeoFA SQL API."""
@@ -93,40 +99,40 @@ class RouteClient:
 
     def get_routes(
         self,
-        route_type: Optional[str] = None,
-        min_length_m: Optional[float] = None,
-        max_length_m: Optional[float] = None,
+        beliggenhedskommune: Optional[int] = None,
+        privatvej: Optional[bool] = None,
+        asfalteret: Optional[bool] = None,
         bbox: Optional[tuple[float, float, float, float]] = None,
-        columns: str = "navn,rute_ty,ST_Length(geometri) AS length_m,geometri",
+        columns: str = "beliggenhedskommune,privatvej,asfalteret,ST_Length(geometri) AS length_m,geometri",
         limit: int = 200,
         srs: int = 4326,
     ) -> list[Route]:
-        """Fetch routes/trails, optionally filtered by type, length, or a WGS84 bbox.
+        """Fetch routes, optionally filtered by attributes or a WGS84 bbox.
 
         Args:
-            route_type:   e.g. "Cykelrute", "Vandrerute", "Kanoerute" (exact match).
-            min_length_m: only routes longer than this many metres.
-            max_length_m: only routes shorter than this many metres.
-            bbox:         (south, west, north, east) in WGS84 — filters to routes
-                          intersecting this envelope.
-            columns:      SQL select list. Must include `geometri` for geometry output.
-            limit:        max rows to return.
-            srs:          EPSG code for the returned geometry (default 4326/WGS84).
+            beliggenhedskommune:    kommunekode, e.g. 570.
+            privatvej:              filter on whether the segment crosses private land/road.
+            asfalteret:             filter on whether the segment has a paved surface.
+            bbox:                   (south, west, north, east) in WGS84 — filters to routes
+                                    intersecting this envelope.
+            columns:                SQL select list. Must include `geometri` for geometry output.
+            limit:                  max rows to return.
+            srs:                    EPSG code for the returned geometry (default 4326/WGS84).
         """
         clauses = []
-        if route_type:
-            clauses.append(f"rute_ty = '{self._escape(route_type)}'")
-        if min_length_m is not None:
-            clauses.append(f"ST_Length(geometri) > {float(min_length_m)}")
-        if max_length_m is not None:
-            clauses.append(f"ST_Length(geometri) < {float(max_length_m)}")
+        if beliggenhedskommune is not None:
+            clauses.append(f"beliggenhedskommune = {int(beliggenhedskommune)}")
+        if privatvej is not None:
+            clauses.append(f"privatvej = {bool(privatvej)}")
+        if asfalteret is not None:
+            clauses.append(f"asfalteret = {bool(asfalteret)}")
         if bbox is not None:
             south, west, north, east = bbox
             clauses.append(
                 f"ST_Intersects(geometri, ST_MakeEnvelope({west}, {south}, {east}, {north}, 4326))"
             )
 
-        sql = f"SELECT {columns} FROM {FACILITY_LINE_TABLE}"
+        sql = f"SELECT {columns} FROM {ROUTE_TABLE}"
         if clauses:
             sql += " WHERE " + " AND ".join(clauses)
         sql += f" LIMIT {int(limit)}"
@@ -159,9 +165,11 @@ class RouteClient:
         for attempt in range(self.retries + 1):
             try:
                 req = urllib.request.Request(url, headers={"User-Agent": self.user_agent})
-                with urllib.request.urlopen(req, timeout=self.timeout) as resp:
+                with urllib.request.urlopen(req, timeout=self.timeout, context=_SSL_CONTEXT) as resp:
                     payload = json.loads(resp.read().decode("utf-8"))
-                if not payload.get("data", {}).get("success", True) and "data" in payload:
+                # "success" and "features" are top-level keys on the API response,
+                # not nested under a "data" key.
+                if not payload.get("success", True):
                     raise GeoFAError(f"GeoFA API reported failure: {payload}")
                 return payload
             except (urllib.error.URLError, TimeoutError, json.JSONDecodeError) as exc:
@@ -172,17 +180,19 @@ class RouteClient:
 
     @staticmethod
     def _parse(payload: dict) -> list[Route]:
-        features = payload.get("data", {}).get("features", [])
+        features = payload.get("features", [])
         routes = []
         for feat in features:
             props = dict(feat.get("properties", {}) or {})
-            name = props.pop("navn", None)
-            route_type = props.pop("rute_ty", None)
+            beliggenhedskommune = props.pop("beliggenhedskommune", None)
+            privatvej = props.pop("privatvej", None)
+            asfalteret = props.pop("asfalteret", None)
             length_m = props.pop("length_m", None)
             routes.append(
                 Route(
-                    name=name,
-                    route_type=route_type,
+                    beliggenhedskommune=beliggenhedskommune,
+                    privatvej=privatvej,
+                    asfalteret=asfalteret,
                     length_m=length_m,
                     geometry=feat.get("geometry", {}),
                     extra=props,
@@ -199,12 +209,12 @@ def _cli() -> None:
     import argparse
 
     parser = argparse.ArgumentParser(
-        description="Fetch Danish route/trail geometries (Cykelrute/Vandrerute/Kanoerute) from GeoFA."
+        description="Fetch Danish Recreational Bike Network Routes from GeoFA."
     )
-    parser.add_argument("--type", dest="route_type", help='e.g. "Cykelrute", "Vandrerute", "Kanoerute"')
+    parser.add_argument("--beliggenhedskommune", dest="beliggenhedskommune", type=int, default=None, help="kommunekode, e.g. 570")
+    parser.add_argument("--asfalteret", type=lambda v: v.lower() in ("1", "true", "yes"), default=None)
+    parser.add_argument("--privatvej", type=lambda v: v.lower() in ("1", "true", "yes"), default=None)
     parser.add_argument("--bbox", help="south,west,north,east (WGS84)")
-    parser.add_argument("--min-length-m", type=float, default=None)
-    parser.add_argument("--max-length-m", type=float, default=None)
     parser.add_argument("--limit", type=int, default=200)
     parser.add_argument("--out", default="-", help="Output file path, or - for stdout")
     parser.add_argument("--format", choices=["geojson", "json"], default="geojson")
@@ -214,9 +224,9 @@ def _cli() -> None:
     bbox = tuple(float(x) for x in args.bbox.split(",")) if args.bbox else None
 
     routes = client.get_routes(
-        route_type=args.route_type,
-        min_length_m=args.min_length_m,
-        max_length_m=args.max_length_m,
+        beliggenhedskommune=args.beliggenhedskommune,
+        privatvej=args.privatvej,
+        asfalteret=args.asfalteret,
         bbox=bbox,
         limit=args.limit,
     )
