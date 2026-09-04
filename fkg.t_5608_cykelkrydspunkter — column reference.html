@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>fkg.t_5608_cykelkrydspunkter — column reference</title>
+<style>
+  body { font-family: -apple-system, Segoe UI, Arial, sans-serif; margin: 2rem; color: #222; background: #fafaf8; }
+  h1 { font-size: 20px; font-weight: 600; margin-bottom: 0.25rem; }
+  .sub { color: #666; font-size: 13px; margin-bottom: 1.25rem; }
+  .legend { display: flex; gap: 18px; flex-wrap: wrap; margin-bottom: 1.25rem; font-size: 13px; }
+  .legend span.swatch { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+  table { border-collapse: collapse; width: 100%; font-size: 12.5px; background: #fff; }
+  th, td { border: 1px solid #ddd; padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { background: #2c2c2a; color: #fff; font-weight: 500; position: sticky; top: 0; }
+  code { font-family: SFMono-Regular, Menlo, monospace; font-size: 12px; }
+  tr.readonly td { background: rgb(255, 192, 203); }
+  tr.required td { background: #fce8d5; }
+  tr.optional td { background: #e1efe1; }
+  tr.geom td { background: #e1ecf7; }
+  .type { color: #666; font-size: 11.5px; }
+  .example { color: #555; font-style: italic; }
+  .section-row td { background: #f0efe9; font-weight: 600; padding: 8px; border-top: 2px solid #ccc; }
+</style>
+</head>
+<body>
+
+<h1>fkg.t_5608_cykelkrydspunkter — Cycle network nodes (theme 5608)</h1>
+<div class="sub">Source: GeoFA specification v2.9 (Fælles KortGrundlag / "Common Map Foundation"), cross-checked against the live table schema via the GeoFA SQL API.</div>
+
+<div class="legend">
+  <div><span class="swatch" style="background:rgb(255, 192, 203);"></span>Read-only / system-generated (S)</div>
+  <div><span class="swatch" style="background:#fce8d5;"></span>Editable — required (O)</div>
+  <div><span class="swatch" style="background:#e1efe1;"></span>Editable — optional (F)</div>
+  <div><span class="swatch" style="background:#e1ecf7;"></span>Geometry</div>
+</div>
+
+<table>
+<tr>
+  <th style="width:16%">Column</th>
+  <th style="width:8%">Data type</th>
+  <th style="width:7%">Status</th>
+  <th style="width:44%">Description</th>
+  <th style="width:25%">Example</th>
+</tr>
+
+<tr class="section-row"><td colspan="5">Read-only / system-generated (S) — auto-filled or auto-translated, don't edit directly</td></tr>
+<tr class="readonly"><td class="colname"><code>temanavn</code></td><td class="type">text</td><td>System (S)</td><td>Translates the theme code into text.</td><td class="example">t_5608_cykelkrydspunkter_t</td></tr>
+<tr class="readonly"><td class="colname"><code>objekt_id</code></td><td class="type">uuid</td><td>System (S)</td><td>Unique ID for the object, constant over time even across updates.</td><td class="example">f9d743fa-e056-11ee-8193-7b8cc9e1afb2</td></tr>
+<tr class="readonly"><td class="colname"><code>versions_id</code></td><td class="type">uuid</td><td>System (S)</td><td>Unique version ID across time; changes on every update to the object.</td><td class="example">8ab24d36-71d1-11f0-bb19-fbf55d9d5ee1</td></tr>
+<tr class="readonly"><td class="colname"><code>systid_fra</code></td><td class="type">timestamptz</td><td>System (S)</td><td>Start of the object's system-level validity. Set automatically.</td><td class="example">2025-08-05 07:55:21+00</td></tr>
+<tr class="readonly"><td class="colname"><code>systid_til</code></td><td class="type">timestamptz</td><td>System (S)</td><td>End of system-level validity. NULL for the current object.</td><td class="example">NULL</td></tr>
+<tr class="readonly"><td class="colname"><code>oprettet</code></td><td class="type">timestamptz</td><td>System (S)</td><td>Timestamp of the object's original creation.</td><td class="example">2024-03-12 09:17:13+00</td></tr>
+<tr class="readonly"><td class="colname"><code>cvr_navn</code></td><td class="type">varchar</td><td>System (S)</td><td>Translates cvr_kode into text (name of the responsible authority).</td><td class="example">Assens Kommune</td></tr>
+<tr class="readonly"><td class="colname"><code>kommunekode</code></td><td class="type">int4</td><td>System (S)</td><td>3-digit municipality code, filled automatically from cvr_kode.</td><td class="example">420</td></tr>
+<tr class="readonly"><td class="colname"><code>oprindelse</code></td><td class="type">varchar</td><td>System (S)</td><td>Translates oprindkode into text (data-capture method).</td><td class="example">Not specified</td></tr>
+<tr class="readonly"><td class="colname"><code>status</code></td><td class="type">varchar</td><td>System (S)</td><td>Translates statuskode into text.</td><td class="example">Current / Adopted</td></tr>
+<tr class="readonly"><td class="colname"><code>offentlig</code></td><td class="type">varchar</td><td>System (S)</td><td>Translates off_kode into text (visibility level).</td><td class="example">Visible to everyone</td></tr>
+<tr class="readonly"><td class="colname"><code>beliggenhedskommune</code></td><td class="type">int4</td><td>System (S)</td><td>Municipality code for the municipality the node sits in. Filled in automatically every night by GeoFA, based on an analysis of the point against the DAGI municipal boundary.</td><td class="example">420</td></tr>
+<tr class="readonly"><td class="colname"><code>planstatus</code></td><td class="type">varchar</td><td>System (S)</td><td>Text translation of planstatus_kode — whether the node is planned or existing. System-translated from the d_basis_planstatus code list.</td><td class="example">Existing</td></tr>
+
+<tr class="section-row"><td colspan="5">Editable — required (O) — must be filled in on creation</td></tr>
+<tr class="required"><td class="colname"><code>temakode</code></td><td class="type">int4</td><td>Required (O)</td><td>Code identifying the dataset/theme. Unique, used among other things as an identifier in the metadata database.</td><td class="example">5608</td></tr>
+<tr class="required"><td class="colname"><code>cvr_kode</code></td><td class="type">int4</td><td>System/(Required)</td><td>CVR code (Danish business registry number) for the responsible authority. Usually filled in automatically from login.</td><td class="example">29189692</td></tr>
+<tr class="required"><td class="colname"><code>bruger_id</code></td><td class="type">varchar</td><td>System/(Required)</td><td>Username from the shared public user-management system, registered automatically.</td><td class="example">dknt</td></tr>
+<tr class="required"><td class="colname"><code>oprindkode</code></td><td class="type">int4</td><td>Required (O)</td><td>Code for the object's origin (data-capture method).</td><td class="example">0</td></tr>
+<tr class="required"><td class="colname"><code>statuskode</code></td><td class="type">int4</td><td>Required (O)</td><td>Code for the object's current status. 0-4, default 3.</td><td class="example">3</td></tr>
+<tr class="required"><td class="colname"><code>off_kode</code></td><td class="type">int4</td><td>Required (O)</td><td>Code for visibility level. 1-3, default 1.</td><td class="example">1</td></tr>
+<tr class="required"><td class="colname"><code>blindt_punkt</code></td><td class="type">bool</td><td>Required (O)</td><td>Indicates whether the node is a dead-end point where a cyclist must ride back the way they came. Corresponds to "deadend" in the specification.</td><td class="example">false</td></tr>
+<tr class="required"><td class="colname"><code>afm_krydspunkt</code></td><td class="type">bool</td><td>Required (O)</td><td>Indicates whether the node is physically signposted in the field. Most nodes are signposted (True); support nodes (refmain) are typically False.</td><td class="example">false</td></tr>
+
+<tr class="section-row"><td colspan="5">Editable — optional (F)</td></tr>
+<tr class="optional"><td class="colname"><code>noegle</code></td><td class="type">varchar</td><td>Optional (F)</td><td>Foreign key linking the object to another database table.</td><td class="example">NULL</td></tr>
+<tr class="optional"><td class="colname"><code>note</code></td><td class="type">varchar</td><td>Optional (F)</td><td>Free-text remarks field for extra description of the node.</td><td class="example">NULL</td></tr>
+<tr class="optional"><td class="colname"><code>krydspunktsnummer</code></td><td class="type">varchar</td><td>Optional (F)</td><td>The node's signposted/way-finding number (corresponds to "nodenumber" in the specification) — the number physically signposted in the field. It is not globally unique — several nodes across Denmark can share the same number (objekt_id is used for global uniqueness).</td><td class="example">24 (can be NULL if the node hasn't been numbered yet)</td></tr>
+<tr class="optional"><td class="colname"><code>planstatus_kode</code></td><td class="type">int4</td><td>Optional (F)</td><td>Code for planning status: 1 = Existing (built/in operation), 2 = Planned (future plan). Nodes are entered by default with status 2, and switched to 1 once the network has been finalized. Code list: d_basis_planstatus.</td><td class="example">1</td></tr>
+<tr class="optional"><td class="colname"><code>primaerpunkt</code></td><td class="type">bool</td><td>Optional (F)</td><td>Indicates whether the node is a main node (True) rather than a support node (False) that intersection/roundabout support points refer to. Corresponds to "ismain" in the specification — the main node is the one shown on maps and in the app.</td><td class="example">false</td></tr>
+<tr class="optional"><td class="colname"><code>link</code></td><td class="type">varchar</td><td>Optional (F)</td><td>Standard field (defined under spec section 4.1) for a general link/URL related to the object — its exact use can vary slightly by theme, but here it has no reserved special purpose.</td><td class="example">NULL</td></tr>
+
+<tr class="section-row"><td colspan="5">Geometry</td></tr>
+<tr class="geom"><td class="colname"><code>geometri</code></td><td class="type">geometry</td><td>System (S)</td><td>Geometric record of the node. Geometry type: Point (returned as MultiPoint via the SQL API). Coordinate precision 0.001 m.</td><td class="example">MULTIPOINT (9.900581531 55.270235285)</td></tr>
+
+</table>
+
+<p style="font-size:11px; color:#888; margin-top:1rem;">Note: "Optional (F)" fields are editable but not required. "Required (O)" fields are editable and must be filled in on creation. "System (S)" fields are auto-generated/translated and should not be edited directly. The column list was pulled live from the table (not empty), and example values come from a real row in Assens Kommune except where marked. Note that the spec PDF (v2.9) still uses older field names for this theme (e.g. <code>id_cykelknudepkt</code>, <code>nodenumber</code>, <code>ismain</code>, <code>deadend</code>, <code>afm_cykelknudepkt</code>), which in the live table have been replaced by <code>krydspunktsnummer</code>, <code>primaerpunkt</code>, <code>blindt_punkt</code>, and <code>afm_krydspunkt</code> — the descriptions above are mapped based on the semantic correspondence between the two naming sets. Danish table/column names and code-list names have intentionally been left untranslated.</p>
+
+</body>
+</html>

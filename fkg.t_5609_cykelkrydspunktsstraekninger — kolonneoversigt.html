@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<title>fkg.t_5609_cykelkrydspunktsstraekninger — kolonneoversigt</title>
+<style>
+  body { font-family: -apple-system, Segoe UI, Arial, sans-serif; margin: 2rem; color: #222; background: #fafaf8; }
+  h1 { font-size: 20px; font-weight: 600; margin-bottom: 0.25rem; }
+  .sub { color: #666; font-size: 13px; margin-bottom: 1.25rem; }
+  .legend { display: flex; gap: 18px; flex-wrap: wrap; margin-bottom: 1.25rem; font-size: 13px; }
+  .legend span.swatch { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+  table { border-collapse: collapse; width: 100%; font-size: 12.5px; background: #fff; }
+  th, td { border: 1px solid #ddd; padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { background: #2c2c2a; color: #fff; font-weight: 500; position: sticky; top: 0; }
+  code { font-family: SFMono-Regular, Menlo, monospace; font-size: 12px; }
+  tr.readonly td { background: rgb(255, 192, 203); }
+  tr.required td { background: #fce8d5; }
+  tr.optional td { background: #e1efe1; }
+  tr.geom td { background: #e1ecf7; }
+  .type { color: #666; font-size: 11.5px; }
+  .example { color: #555; font-style: italic; }
+  .section-row td { background: #f0efe9; font-weight: 600; padding: 8px; border-top: 2px solid #ccc; }
+</style>
+</head>
+<body>
+
+<h1>fkg.t_5609_cykelkrydspunktsstraekninger — Cykelknudepunktsstrækninger (tema 5609)</h1>
+<div class="sub">Kilde: GeoFA specifikation v2.9 (Fælles KortGrundlag), krydstjekket mod live tabelskema via GeoFA SQL API.</div>
+
+<div class="legend">
+  <div><span class="swatch" style="background:rgb(255, 192, 203);"></span>Read-only / system-genereret (S)</div>
+  <div><span class="swatch" style="background:#fce8d5;"></span>Redigerbar — obligatorisk (O)</div>
+  <div><span class="swatch" style="background:#e1efe1;"></span>Redigerbar — frit felt (F)</div>
+  <div><span class="swatch" style="background:#e1ecf7;"></span>Geometri</div>
+</div>
+
+<table>
+<tr>
+  <th style="width:16%">Kolonne</th>
+  <th style="width:8%">Datatype</th>
+  <th style="width:7%">Status</th>
+  <th style="width:44%">Beskrivelse</th>
+  <th style="width:25%">Eksempel</th>
+</tr>
+
+<tr class="section-row"><td colspan="5">Read-only / system-genereret (S) — auto-udfyldt eller auto-oversat, redigér ikke direkte</td></tr>
+<tr class="readonly"><td class="colname"><code>temanavn</code></td><td class="type">text</td><td>System (S)</td><td>Oversætter temakoden til tekst.</td><td class="example">t_5609_cykelkrydspunktsstraekninger_t</td></tr>
+<tr class="readonly"><td class="colname"><code>objekt_id</code></td><td class="type">uuid</td><td>System (S)</td><td>Entydigt ID for objektet, konstant over tid selv ved opdateringer.</td><td class="example">1ac6e954-dfb6-11ee-b4c6-d94919180272</td></tr>
+<tr class="readonly"><td class="colname"><code>versions_id</code></td><td class="type">uuid</td><td>System (S)</td><td>Unikt version-ID på tværs af tid; ændres ved enhver opdatering af objektet.</td><td class="example">2c5de54a-1ed5-11f1-a80f-5dee119bc1c5</td></tr>
+<tr class="readonly"><td class="colname"><code>systid_fra</code></td><td class="type">timestamptz</td><td>System (S)</td><td>Start på objektets systemmæssige gyldighed. Sættes automatisk.</td><td class="example">2026-03-13 12:07:13+00</td></tr>
+<tr class="readonly"><td class="colname"><code>systid_til</code></td><td class="type">timestamptz</td><td>System (S)</td><td>Slut på systemmæssig gyldighed. NULL for gældende objekt.</td><td class="example">NULL</td></tr>
+<tr class="readonly"><td class="colname"><code>oprettet</code></td><td class="type">timestamptz</td><td>System (S)</td><td>Tidspunkt for objektets første oprettelse.</td><td class="example">2024-03-11 13:45:58+00</td></tr>
+<tr class="readonly"><td class="colname"><code>cvr_navn</code></td><td class="type">varchar</td><td>System (S)</td><td>Oversætter cvr_kode til tekst (myndighedsnavn).</td><td class="example">Svendborg Kommune</td></tr>
+<tr class="readonly"><td class="colname"><code>kommunekode</code></td><td class="type">int4</td><td>System (S)</td><td>3-cifret kommunenummer, udfyldes automatisk via cvr_kode.</td><td class="example">479</td></tr>
+<tr class="readonly"><td class="colname"><code>oprindelse</code></td><td class="type">varchar</td><td>System (S)</td><td>Oversætter oprindkode til tekst (registreringsmetode).</td><td class="example">Ikke udfyldt</td></tr>
+<tr class="readonly"><td class="colname"><code>status</code></td><td class="type">varchar</td><td>System (S)</td><td>Oversætter statuskode til tekst.</td><td class="example">Gældende / Vedtaget</td></tr>
+<tr class="readonly"><td class="colname"><code>offentlig</code></td><td class="type">varchar</td><td>System (S)</td><td>Oversætter off_kode til tekst (tilgængelighedsniveau).</td><td class="example">Synlig for alle</td></tr>
+<tr class="readonly"><td class="colname"><code>beliggenhedskommune</code></td><td class="type">int4</td><td>System (S)</td><td>Kommunenummer for den kommune, cykelknudepunktsstrækningen ligger i. Udfyldes automatisk hver nat af GeoFA ud fra en analyse mellem strækningen og DAGI-kommunegrænsen.</td><td class="example">479</td></tr>
+<tr class="readonly"><td class="colname"><code>planstatus</code></td><td class="type">varchar</td><td>System (S)</td><td>Tekstoversættelse af planstatus_kode — om strækningen er planlagt eller eksisterende. Systemoversat fra kodelisten d_basis_planstatus.</td><td class="example">Eksisterende</td></tr>
+
+<tr class="section-row"><td colspan="5">Redigerbar — obligatorisk (O) — skal udfyldes ved oprettelse</td></tr>
+<tr class="required"><td class="colname"><code>temakode</code></td><td class="type">int4</td><td>Obligatorisk (O)</td><td>Kode der identificerer datasættet/temaet. Unik, bruges bl.a. som identifikator i metadatabasen.</td><td class="example">5609</td></tr>
+<tr class="required"><td class="colname"><code>cvr_kode</code></td><td class="type">int4</td><td>System/(Obligatorisk)</td><td>CVR-kode for ansvarlig myndighed. Typisk udfyldt automatisk fra login.</td><td class="example">29189730</td></tr>
+<tr class="required"><td class="colname"><code>bruger_id</code></td><td class="type">varchar</td><td>System/(Obligatorisk)</td><td>Brugernavn fra fælles offentlig brugerstyring, registreres automatisk.</td><td class="example">dknt</td></tr>
+<tr class="required"><td class="colname"><code>oprindkode</code></td><td class="type">int4</td><td>Obligatorisk (O)</td><td>Kode for objektets oprindelse (registreringsmetode).</td><td class="example">0</td></tr>
+<tr class="required"><td class="colname"><code>statuskode</code></td><td class="type">int4</td><td>Obligatorisk (O)</td><td>Kode for objektets gældende status. 0-4, default 3.</td><td class="example">3</td></tr>
+<tr class="required"><td class="colname"><code>off_kode</code></td><td class="type">int4</td><td>Obligatorisk (O)</td><td>Kode for tilgængelighedsniveau. 1-3, default 1.</td><td class="example">1</td></tr>
+<tr class="required"><td class="colname"><code>privatvej</code></td><td class="type">bool</td><td>Obligatorisk (O)</td><td>Angiver om strækningen mellem to cykelknudepunkter fører over privatejede arealer (True) eller ej (False, oftest tilfældet). Svarer til "privatenot" i specifikationen. Til kommunikation og navigation.</td><td class="example">false</td></tr>
+<tr class="required"><td class="colname"><code>asfalteret</code></td><td class="type">bool</td><td>Obligatorisk (O)</td><td>Angiver om der er fast belægning på hele strækningen (True) eller om den helt/delvist er grusbelagt (False). Svarer til "surfacenot" i specifikationen. Til kommunikation og navigation.</td><td class="example">false</td></tr>
+<tr class="required"><td class="colname"><code>ensrettet</code></td><td class="type">bool</td><td>Obligatorisk (O)</td><td>Angiver om der er ensretning på hele eller dele af strækningen. Svarer til "onewaynot" i specifikationen. Til kommunikation og navigation.</td><td class="example">true</td></tr>
+
+<tr class="section-row"><td colspan="5">Redigerbar — frit felt (F) — valgfrit</td></tr>
+<tr class="optional"><td class="colname"><code>noegle</code></td><td class="type">varchar</td><td>Frit (F)</td><td>Fremmed nøgle til objektet i en anden databasetabel.</td><td class="example">NULL</td></tr>
+<tr class="optional"><td class="colname"><code>note</code></td><td class="type">varchar</td><td>Frit (F)</td><td>Frit bemærkningsfelt til supplerende beskrivelse af strækningen.</td><td class="example">NULL</td></tr>
+<tr class="optional"><td class="colname"><code>planstatus_kode</code></td><td class="type">int4</td><td>Frit (F)</td><td>Kode for planmæssig status: 1 = Eksisterende (anlagt/i drift), 2 = Planlagt (fremtidig plan). Strækninger lægges som udgangspunkt ind med status 2, og skiftes til 1 når netværket er kvalificeret. Kodeliste: d_basis_planstatus.</td><td class="example">1</td></tr>
+<tr class="optional"><td class="colname"><code>link</code></td><td class="type">varchar</td><td>Frit (F)</td><td>Standardfelt (defineret under spec. afsnit 4.1) til et generelt link/URL relateret til objektet.</td><td class="example">NULL</td></tr>
+
+<tr class="section-row"><td colspan="5">Geometri</td></tr>
+<tr class="geom"><td class="colname"><code>geometri</code></td><td class="type">geometry</td><td>System (S)</td><td>Geometrisk registrering af strækningen mellem to cykelknudepunkter. Geometritype: Linje (leveres som MultiLineString via SQL API'et). Bør placeres på stimidte, vejmidte eller vejkant iht. GeoDanmark-grunddata, og danne topologisk sammenhæng med tema 5608 (cykelknudepunkter). Koordinatpræcision 0,001 m.</td><td class="example">MULTILINESTRING ((10.7259 55.1217, ...))</td></tr>
+
+</table>
+
+<p style="font-size:11px; color:#888; margin-top:1rem;">Bemærk: "Frit (F)" felter er redigerbare, men valgfrie. "Obligatorisk (O)" felter er redigerbare og skal udfyldes ved oprettelse. "System (S)" felter genereres/oversættes automatisk og bør ikke redigeres direkte. Kolonnelisten er hentet live fra tabellen (ikke tom), og eksempelværdier stammer fra en reel række fra Svendborg Kommune, undtagen hvor markeret. Bemærk at spec-PDF'en (v2.9) bruger ældre feltnavne for dette tema (fx <code>privatenot</code>, <code>surfacenot</code>, <code>onewaynot</code>), som i den live tabel er erstattet af <code>privatvej</code>, <code>asfalteret</code> og <code>ensrettet</code> — beskrivelserne herover er mappet ud fra den semantiske sammenhæng mellem de to navngivningssæt. Bemærk desuden at tabellen ikke indeholder noget node-referencefelt (fra/til-knudepunkt) — sammenhængen til 5608 skal udledes geometrisk (se topology-extraction skill).</p>
+
+</body>
+</html>
