@@ -19,6 +19,8 @@ The connection between a stretch and its two endpoint nodes has
 to be derived spatially —
 snap each line's start/end vertex to the nearest 5608 point. 
 
+## SQL API doc for ALL GeoFA https://github.com/GeoDanmarkGeoFA/Dokumentation/blob/main/api.md (in Danish only).
+
 <!-- This is what the `topology-extraction` of the geo-fa MCP skill handles. -->
 
 ## How the API works
