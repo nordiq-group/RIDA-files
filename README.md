@@ -1,9 +1,10 @@
-# Connecting to the GeoFA Ecosystem — Bike Nodes & Bike-Node Routes
+# Connecting to the GeoFA Ecosystem — The GeoFA API - Recreational Bike Node Net only
 
 ## What GeoFA is
 
 GeoFA (Geografisk Administrationsgrundlag) is the Danish national platform for municipally-maintained 
 outdoor/recreation and facility geodata, built on the FKG (Fælles KortGrundlag) data model. 
+
 It's read via a SQL-style HTTP API that lets you `SELECT` from tables named `fkg.t_<theme>_<shortname>`.
 
 ## Two themes for cycle-nodes and -routes
