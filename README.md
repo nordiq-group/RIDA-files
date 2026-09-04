@@ -23,7 +23,6 @@ snap each line's start/end vertex to the nearest 5608 point.
 
 https://github.com/GeoDanmarkGeoFA/Dokumentation/blob/main/api.md (Danish only)
 
-<!-- This is what the `topology-extraction` of the geo-fa MCP skill handles. -->
 
 ## How the API works
 
