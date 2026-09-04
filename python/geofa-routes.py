@@ -1,13 +1,13 @@
 """
 geofa_routes.py
 
-Fetch Danish bike-node-network segment geometries (Cykelknudepunktsstraekninger,
+Fetch Danish bike-node-network segment geometries (Cykelkrydspunktsstraekninger,
 GeoFA theme 5609) from GeoFA's public SQL API.
 
-This is the segment/line counterpart to the cykelknudepunkter *nodes* theme
+This is the segment/line counterpart to the cykelkrydspunkter *nodes* theme
 (5608) — table fkg.t_5609_cykelkrydspunktsstraekninger. Note the "kryds"
-spelling in the live table name (not "knude", despite the theme's Danish
-name and every field in the spec PDF using "knude"). This theme has no
+spelling in the live table name (not "kryds", despite the theme's Danish
+name and every field in the spec PDF using "kryds"). This theme has no
 `navn`/`rute_ty` columns — it is not typed by route (Cykelrute/Vandrerute/
 Kanoerute); segments are described by `beliggenhedskommune` (kommune code)
 and boolean surface/access flags (`asfalteret`, `privatvej`). No API key is
