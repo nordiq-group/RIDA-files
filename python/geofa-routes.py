@@ -47,7 +47,7 @@ try:
 except ImportError:
     _SSL_CONTEXT = ssl.create_default_context()
 
-GEOFA_SQL_ENDPOINT = "https://geofa.geodanmark.dk/api/v2/sql/fkg"
+GEOFA_SQL_ENDPOINT = "https://geofa.geodanmark.dk/api/v4/sql/fkg"
 
 ROUTE_TABLE = "fkg.t_5609_cykelkrydspunktsstraekninger"
 

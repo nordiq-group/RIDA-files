@@ -36,7 +36,7 @@ PostGIS functions work inline — `ST_Length`, `ST_Within`, `ST_MakeEnvelope`, e
 
 **Base URL**
 
-``https://geofa.geodanmark.dk/api/v2/sql/fkg``
+``https://geofa.geodanmark.dk/api/v4/sql/fkg``
 
 **Parameters**
 
@@ -52,12 +52,12 @@ PostGIS functions work inline — `ST_Length`, `ST_Within`, `ST_MakeEnvelope`, e
 
 **Simplest Working example** — All bike nodes in Denmark, as lat/lon GeoJSON:
 ```
-https://geofa.geodanmark.dk/api/v2/sql/fkg?q=SELECT+krydspunktsnummer,geometri+FROM+fkg.t_5608_cykelkrydspunkter&srs=4326&format=geojson
+https://geofa.geodanmark.dk/api/v4/sql/fkg?q=SELECT+krydspunktsnummer,geometri+FROM+fkg.t_5608_cykelkrydspunkter&srs=4326&format=geojson
 ```
 
 **Scoped to a municipality:** — bike nodes in Varde (municipal code = 573), as lat/lon GeoJSON:
 ```
-https://geofa.geodanmark.dk/api/v2/sql/fkg?q=SELECT+krydspunktsnummer,geometri+FROM+fkg.t_5608_cykelkrydspunkter+WHERE+kommunekode=573&srs=4326&format=geojson
+https://geofa.geodanmark.dk/api/v4/sql/fkg?q=SELECT+krydspunktsnummer,geometri+FROM+fkg.t_5608_cykelkrydspunkter+WHERE+kommunekode=573&srs=4326&format=geojson
 ```
 
 
@@ -65,11 +65,11 @@ https://geofa.geodanmark.dk/api/v2/sql/fkg?q=SELECT+krydspunktsnummer,geometri+F
 Same query but for routes
 
 ```
-https://geofa.geodanmark.dk/api/v2/sql/fkg?q=SELECT+geometri+FROM+fkg.t_5609_cykelkrydspunktsstraekninger&srs=4326&format=geojson
+https://geofa.geodanmark.dk/api/v4/sql/fkg?q=SELECT+geometri+FROM+fkg.t_5609_cykelkrydspunktsstraekninger&srs=4326&format=geojson
 ```
 
 ```
-https://geofa.geodanmark.dk/api/v2/sql/fkg?q=SELECT+geometri+FROM+fkg.t_5609_cykelkrydspunktsstraekninger+WHERE+kommunekode=573&srs=4326&format=geojson
+https://geofa.geodanmark.dk/api/v4/sql/fkg?q=SELECT+geometri+FROM+fkg.t_5609_cykelkrydspunktsstraekninger+WHERE+kommunekode=573&srs=4326&format=geojson
 ```
 
 ## Demo queries
